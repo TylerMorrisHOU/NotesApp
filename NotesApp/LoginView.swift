@@ -16,38 +16,36 @@ struct LoginView: View {
     @State private var isLoggedIn: Bool = false
 
     var body: some View {
-        if isLoggedIn {
-            Text("Welcome!")
-                .font(.largeTitle)
+        NavigationView {
+            if isLoggedIn {
+                ContentView()
+            } else {
+                VStack(spacing: 20) {
+                    TextField("Email", text: $email)
+                        .autocapitalization(.none)
+                        .keyboardType(.emailAddress)
+
+                    SecureField("Password", text: $password)
+
+                    Button(action: {
+                        loginUser(email: email, password: password)
+                    }) {
+                        Text("Login")
+                            .padding()
+                    }
+
+                    if !errorMessage.isEmpty {
+                        Text(errorMessage)
+                    }
+                    NavigationLink {
+                        SignupView()
+                    } label: {
+                        Text("Register")
+                    }
+                }
                 .padding()
-        } else {
-            VStack(spacing: 20) {
-                TextField("Email", text: $email)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .autocapitalization(.none)
-                    .keyboardType(.emailAddress)
-
-                SecureField("Password", text: $password)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-
-                Button(action: {
-                    loginUser(email: email, password: password)
-                }) {
-                    Text("Login")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-
-                if !errorMessage.isEmpty {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .font(.caption)
-                }
+                .navigationTitle("Login")
             }
-            .padding()
         }
     }
 
@@ -61,7 +59,6 @@ struct LoginView: View {
         }
     }
 }
-
 
 #Preview {
     LoginView()
